@@ -16,14 +16,13 @@ import java.util.List;
 @RequiredArgsConstructor
 public class PierServiceImpl implements PierService {
     private final PierRepository pierRepository;
-    private final PierModelConverter pierModelConverter;
 
     @Override
     public PierDTO getPier(long id) {
         Pier foundPierEntity = pierRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Pier " + id + " not found in db!"));
 
-        return pierModelConverter.toPierDTO(foundPierEntity);
+        return PierModelConverter.toPierDTO(foundPierEntity);
     }
 
     @Override
@@ -32,7 +31,7 @@ public class PierServiceImpl implements PierService {
         PiersDTO piers = new PiersDTO();
 
         piers.setPiers(allPierEntities.stream()
-                .map(pierModelConverter::toPierDTO)
+                .map(PierModelConverter::toPierDTO)
                 .toList());
 
         return piers;
@@ -40,20 +39,20 @@ public class PierServiceImpl implements PierService {
 
     @Override
     public PierDTO createPier(PierDTO newPierDTO) {
-        Pier pierEntitiy = pierModelConverter.toPierEntity(newPierDTO);
+        Pier pierEntitiy = PierModelConverter.toPierEntity(newPierDTO);
         Pier createdPierEntity = pierRepository.save(pierEntitiy);
 
-        return pierModelConverter.toPierDTO(createdPierEntity);
+        return PierModelConverter.toPierDTO(createdPierEntity);
     }
 
     @Override
     public PierDTO updatePier(long id, PierDTO updatedPierDTO) {
-        Pier pierEntitiy = pierModelConverter.toPierEntity(updatedPierDTO);
+        Pier pierEntitiy = PierModelConverter.toPierEntity(updatedPierDTO);
         pierEntitiy.setId(id);
 
         Pier updatedPierEntity = pierRepository.save(pierEntitiy);
 
-        return pierModelConverter.toPierDTO(updatedPierEntity);
+        return PierModelConverter.toPierDTO(updatedPierEntity);
     }
 
     @Override
