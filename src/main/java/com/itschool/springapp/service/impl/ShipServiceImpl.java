@@ -1,9 +1,11 @@
 package com.itschool.springapp.service.impl;
 
+import com.itschool.springapp.entity.Pier;
 import com.itschool.springapp.entity.Ship;
 import com.itschool.springapp.exception.EntityNotFoundException;
 import com.itschool.springapp.model.ShipDTO;
 import com.itschool.springapp.model.ShipsDTO;
+import com.itschool.springapp.repository.PierRepository;
 import com.itschool.springapp.repository.ShipRepository;
 import com.itschool.springapp.service.ShipService;
 import com.itschool.springapp.utils.ShipModelConverter;
@@ -16,14 +18,14 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ShipServiceImpl implements ShipService {
     private final ShipRepository shipRepository;
-    private final ShipModelConverter shipModelConverter;
+    private final PierRepository pierRepository;
 
     @Override
     public ShipDTO getShip(long id) {
         Ship foundShipEntity = shipRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Ship " + id + " not found in db!"));
 
-        return shipModelConverter.toShipDTO(foundShipEntity);
+        return ShipModelConverter.toShipDTO(foundShipEntity);
     }
 
     @Override
@@ -32,7 +34,7 @@ public class ShipServiceImpl implements ShipService {
 
         ShipsDTO shipsDTO = new ShipsDTO();
         shipsDTO.setShips(allShipEntities.stream()
-                .map(shipModelConverter::toShipDTO)
+                .map(ShipModelConverter::toShipDTO)
                 .toList());
 
         return shipsDTO;
@@ -40,21 +42,26 @@ public class ShipServiceImpl implements ShipService {
 
     @Override
     public ShipDTO createShip(ShipDTO newShipDTO) {
-        Ship shipEntity = shipModelConverter.toShipEntity(newShipDTO);
+        Pier pierEntity = pierRepository.findById(newShipDTO.pierId()).orElseThrow(() ->
+                new EntityNotFoundException("Pier not found in db!"));
+
+        Ship shipEntity = ShipModelConverter.toShipEntity(newShipDTO, pierEntity);
 
         Ship createdShipEntity = shipRepository.save(shipEntity);
 
-        return shipModelConverter.toShipDTO(createdShipEntity);
+        return ShipModelConverter.toShipDTO(createdShipEntity);
     }
 
     @Override
     public ShipDTO updateShip(long id, ShipDTO updatedShipDTO) {
-        Ship shipEntity = shipModelConverter.toShipEntity(updatedShipDTO);
+        Pier pierEntity = pierRepository.findById(updatedShipDTO.pierId()).orElseThrow(() ->
+                new EntityNotFoundException("Pier not found in db!"));
+        Ship shipEntity = ShipModelConverter.toShipEntity(updatedShipDTO, pierEntity);
         shipEntity.setId(id);
 
         Ship updatedShipEntity = shipRepository.save(shipEntity);
 
-        return shipModelConverter.toShipDTO(updatedShipEntity);
+        return ShipModelConverter.toShipDTO(updatedShipEntity);
     }
 
     @Override
@@ -68,7 +75,7 @@ public class ShipServiceImpl implements ShipService {
 
         shipsDTO.setShips(shipRepository.findShipByPier_Id(pierId)
                 .stream()
-                .map(shipModelConverter::toShipDTO)
+                .map(ShipModelConverter::toShipDTO)
                 .toList());
 
         return shipsDTO;

@@ -9,6 +9,6 @@ public record ShipDTO(
         String shipType,
         Long tonnage,
         CargoDTO cargo,
-        PierDTO pierDTO
+        long pierId
 ) {
 }

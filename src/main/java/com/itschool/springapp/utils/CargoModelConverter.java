@@ -2,14 +2,11 @@ package com.itschool.springapp.utils;
 
 import com.itschool.springapp.entity.Cargo;
 import com.itschool.springapp.model.CargoDTO;
-import org.springframework.stereotype.Component;
-
 import java.util.Optional;
 
-@Component
 public class CargoModelConverter {
 
-    public CargoDTO toCargoDTO(Cargo cargoEntity) {
+    public static CargoDTO toCargoDTO(Cargo cargoEntity) {
         return Optional.ofNullable(cargoEntity)
                 .map(cargo -> new CargoDTO(
                         cargo.getId(),
@@ -19,7 +16,7 @@ public class CargoModelConverter {
                 .orElse(null);
     }
 
-    public Cargo toCargoEntity(CargoDTO cargoDTO) {
+    public static Cargo toCargoEntity(CargoDTO cargoDTO) {
         if (cargoDTO == null) {
             return null;
         }

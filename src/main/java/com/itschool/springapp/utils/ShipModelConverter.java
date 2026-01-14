@@ -6,18 +6,12 @@ import com.itschool.springapp.entity.Ship;
 import com.itschool.springapp.model.CargoDTO;
 import com.itschool.springapp.model.PierDTO;
 import com.itschool.springapp.model.ShipDTO;
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Component;
 
-@RequiredArgsConstructor
-@Component
 public class ShipModelConverter {
-    private final PierModelConverter pierModelConverter;
-    private final CargoModelConverter cargoModelConverter;
 
-    public ShipDTO toShipDTO(Ship shipEntity) {
-        CargoDTO cargoDTO = cargoModelConverter.toCargoDTO(shipEntity.getCargo());
-        PierDTO pierDTO = pierModelConverter.toPierDTO(shipEntity.getPier());
+    public static ShipDTO toShipDTO(Ship shipEntity) {
+        CargoDTO cargoDTO = CargoModelConverter.toCargoDTO(shipEntity.getCargo());
+        PierDTO pierDTO = PierModelConverter.toPierDTO(shipEntity.getPier());
 
         return new ShipDTO(
                 shipEntity.getId(),
@@ -25,16 +19,14 @@ public class ShipModelConverter {
                 shipEntity.getShipType(),
                 shipEntity.getTonnage(),
                 cargoDTO,
-                pierDTO
+                pierDTO.id()
         );
 
     }
 
-    public Ship toShipEntity(ShipDTO shipDTO) {
+    public static Ship toShipEntity(ShipDTO shipDTO, Pier pier) {
         CargoDTO cargoDTO = shipDTO.cargo();
-        Cargo cargo = cargoModelConverter.toCargoEntity(cargoDTO);
-        PierDTO pierDTO = shipDTO.pierDTO();
-        Pier pier =  pierModelConverter.toPierEntity(pierDTO);
+        Cargo cargo = CargoModelConverter.toCargoEntity(cargoDTO);
 
         Ship ship = new Ship();
 
