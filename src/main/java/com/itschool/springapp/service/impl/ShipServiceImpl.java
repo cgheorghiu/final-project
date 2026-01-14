@@ -43,7 +43,7 @@ public class ShipServiceImpl implements ShipService {
     @Override
     public ShipDTO createShip(ShipDTO newShipDTO) {
         Pier pierEntity = pierRepository.findById(newShipDTO.pierId()).orElseThrow(() ->
-                new EntityNotFoundException("Pier not found in db!"));
+                new EntityNotFoundException("Pier " + newShipDTO.pierId() + " not found in db!"));
 
         Ship shipEntity = ShipModelConverter.toShipEntity(newShipDTO, pierEntity);
 
@@ -55,7 +55,7 @@ public class ShipServiceImpl implements ShipService {
     @Override
     public ShipDTO updateShip(long id, ShipDTO updatedShipDTO) {
         Pier pierEntity = pierRepository.findById(updatedShipDTO.pierId()).orElseThrow(() ->
-                new EntityNotFoundException("Pier not found in db!"));
+                new EntityNotFoundException("Pier " + updatedShipDTO.pierId() + " not found in db!"));
         Ship shipEntity = ShipModelConverter.toShipEntity(updatedShipDTO, pierEntity);
         shipEntity.setId(id);
 
