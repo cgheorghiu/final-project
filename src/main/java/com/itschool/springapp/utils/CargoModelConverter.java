@@ -6,6 +6,10 @@ import java.util.Optional;
 
 public class CargoModelConverter {
 
+    private CargoModelConverter() {
+        //needed for restricting the class instantiation
+    }
+
     public static CargoDTO toCargoDTO(Cargo cargoEntity) {
         return Optional.ofNullable(cargoEntity)
                 .map(cargo -> new CargoDTO(

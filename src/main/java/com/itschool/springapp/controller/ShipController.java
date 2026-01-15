@@ -31,14 +31,14 @@ public class ShipController {
 
     @Operation(summary = "Add a new ship", description = "Add a new ship to the database and return the created ship")
     @PostMapping
-    public ShipDTO createShip(@RequestBody ShipDTO ShipDTO) {
-        return shipService.createShip(ShipDTO);
+    public ShipDTO createShip(@RequestBody ShipDTO shipDTO) {
+        return shipService.createShip(shipDTO);
     }
 
     @Operation(summary = "Update a ship", description = "Update a ship by their id and return the updated ship")
     @PutMapping("{id}")
-    public ShipDTO updateShip(@PathVariable long id, @RequestBody ShipDTO ShipDTO) {
-        return shipService.updateShip(id, ShipDTO);
+    public ShipDTO updateShip(@PathVariable long id, @RequestBody ShipDTO shipDTO) {
+        return shipService.updateShip(id, shipDTO);
     }
 
     @Operation(summary = "Delete a ship", description = "Delete a ship by their id. An HTTP 200 OK response is returned if the ship was deleted successfully")

@@ -39,18 +39,21 @@ public class PierServiceImpl implements PierService {
 
     @Override
     public PierDTO createPier(PierDTO newPierDTO) {
-        Pier pierEntitiy = PierModelConverter.toPierEntity(newPierDTO);
-        Pier createdPierEntity = pierRepository.save(pierEntitiy);
+        Pier pierEntity = PierModelConverter.toPierEntity(newPierDTO);
+        Pier createdPierEntity = pierRepository.save(pierEntity);
 
         return PierModelConverter.toPierDTO(createdPierEntity);
     }
 
     @Override
     public PierDTO updatePier(long id, PierDTO updatedPierDTO) {
-        Pier pierEntitiy = PierModelConverter.toPierEntity(updatedPierDTO);
-        pierEntitiy.setId(id);
+        if (!pierRepository.existsById(id)) {
+            throw new EntityNotFoundException("Pier " + id + " not found in db!");
+        }
+        Pier pierEntity = PierModelConverter.toPierEntity(updatedPierDTO);
+        pierEntity.setId(id);
 
-        Pier updatedPierEntity = pierRepository.save(pierEntitiy);
+        Pier updatedPierEntity = pierRepository.save(pierEntity);
 
         return PierModelConverter.toPierDTO(updatedPierEntity);
     }

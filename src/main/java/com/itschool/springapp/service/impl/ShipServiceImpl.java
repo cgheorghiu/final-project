@@ -56,6 +56,9 @@ public class ShipServiceImpl implements ShipService {
     public ShipDTO updateShip(long id, ShipDTO updatedShipDTO) {
         Pier pierEntity = pierRepository.findById(updatedShipDTO.pierId()).orElseThrow(() ->
                 new EntityNotFoundException("Pier " + updatedShipDTO.pierId() + " not found in db!"));
+        if (!shipRepository.existsById(id)) {
+            throw new EntityNotFoundException("Ship " + id + " not found in db!");
+        }
         Ship shipEntity = ShipModelConverter.toShipEntity(updatedShipDTO, pierEntity);
         shipEntity.setId(id);
 

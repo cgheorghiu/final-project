@@ -5,6 +5,10 @@ import com.itschool.springapp.model.PierDTO;
 
 public class PierModelConverter {
 
+    private PierModelConverter() {
+        //needed for restricting the class instantiation
+    }
+
     public static PierDTO toPierDTO(Pier pierEntity) {
         return new PierDTO(
                 pierEntity.getId(),

@@ -9,6 +9,10 @@ import com.itschool.springapp.model.ShipDTO;
 
 public class ShipModelConverter {
 
+    private ShipModelConverter() {
+        //needed for restricting the class instantiation
+    }
+
     public static ShipDTO toShipDTO(Ship shipEntity) {
         CargoDTO cargoDTO = CargoModelConverter.toCargoDTO(shipEntity.getCargo());
         PierDTO pierDTO = PierModelConverter.toPierDTO(shipEntity.getPier());
