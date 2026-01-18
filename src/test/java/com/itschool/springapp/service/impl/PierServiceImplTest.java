@@ -74,19 +74,29 @@ class PierServiceImplTest {
 
     @Test
     void createPier() {
-        PierDTO dto = new PierDTO(
+        PierDTO pierDTO = new PierDTO(
                 PIER_ID,
                 PIER_NAME,
                 PIER_TONNAGE
         );
-        Pier entity = new Pier();
+        Pier pierEntity = PierModelConverter.toPierEntity(pierDTO);
 
-        Mockito.when(pierRepository.save(Mockito.any(Pier.class))).thenReturn(entity);
+        Mockito.when(pierRepository.save(Mockito.argThat(p ->
+                PIER_NAME.equals(p.getName()) &&
+                        PIER_TONNAGE == p.getTonnageCapacity()
+        ))).thenReturn(pierEntity);
 
-        PierDTO result = pierService.createPier(dto);
+        PierDTO result = pierService.createPier(pierDTO);
 
         assertNotNull(result);
-        Mockito.verify(pierRepository).save(Mockito.any(Pier.class));
+        assertEquals(PIER_NAME, result.name());
+        assertEquals(PIER_TONNAGE, result.tonnageCapacity());
+
+        Mockito.verify(pierRepository, Mockito.times(1))
+                .save(Mockito.argThat(p ->
+                        PIER_NAME.equals(p.getName()) &&
+                                PIER_TONNAGE == p.getTonnageCapacity()
+                ));
     }
 
     @Test
@@ -116,7 +126,10 @@ class PierServiceImplTest {
         updatedPier.setId(PIER_ID);
 
         Mockito.when(pierRepository.existsById(PIER_ID)).thenReturn(true);
-        Mockito.when(pierRepository.save(Mockito.any(Pier.class))).thenReturn(updatedPier);
+        Mockito.when(pierRepository.save(
+                Mockito.argThat(
+                        pier -> pier.getId() == PIER_ID
+                ))).thenReturn(updatedPier);
 
         PierDTO pierDTO = pierService.updatePier(PIER_ID, updatedPierDTO);
 
@@ -126,7 +139,9 @@ class PierServiceImplTest {
         assertEquals(PIER_TONNAGE, pierDTO.tonnageCapacity());
 
         Mockito.verify(pierRepository).existsById(PIER_ID);
-        Mockito.verify(pierRepository).save(Mockito.any(Pier.class));
+        Mockito.verify(pierRepository).save(Mockito.argThat(
+                pier -> pier.getId() == PIER_ID
+        ));
     }
 
     @Test
